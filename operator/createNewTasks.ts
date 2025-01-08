@@ -10,11 +10,11 @@ const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
 /// TODO: Hack
 let chainId = 31337;
 
-const avsDeploymentData = JSON.parse(fs.readFileSync(path.resolve(__dirname, `../contracts/deployments/hello-world/${chainId}.json`), 'utf8'));
-const helloWorldServiceManagerAddress = avsDeploymentData.addresses.helloWorldServiceManager;
-const helloWorldServiceManagerABI = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../abis/HelloWorldServiceManager.json'), 'utf8'));
+const avsDeploymentData = JSON.parse(fs.readFileSync(path.resolve(__dirname, `../contracts/deployments/obsidian/${chainId}.json`), 'utf8'));
+const obsidianServiceManagerAddress = avsDeploymentData.addresses.obsidianServiceManagerAddress;
+const obsidianServiceManagerABI = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../abis/ObsidianServiceManager.json'), 'utf8'));
 // Initialize contract objects from ABIs
-const helloWorldServiceManager = new ethers.Contract(helloWorldServiceManagerAddress, helloWorldServiceManagerABI, wallet);
+const obsidianServiceManager = new ethers.Contract(obsidianServiceManagerAddress, obsidianServiceManagerABI, wallet);
 
 
 // Function to generate random names
@@ -27,12 +27,10 @@ function generateRandomName(): string {
     return randomName;
   }
 
-async function createNewTask(taskName: string) {
+async function createInstance(taskName: string) {
   try {
-    // Send a transaction to the createNewTask function
-    const tx = await helloWorldServiceManager.createNewTask(taskName);
+    const tx = await obsidianServiceManager.createInstance(taskName);
     
-    // Wait for the transaction to be mined
     const receipt = await tx.wait();
     
     console.log(`Transaction successful with hash: ${receipt.hash}`);
@@ -46,7 +44,7 @@ function startCreatingTasks() {
   setInterval(() => {
     const randomName = generateRandomName();
     console.log(`Creating new task with name: ${randomName}`);
-    createNewTask(randomName);
+    createInstance(randomName);
   }, 24000);
 }
 
